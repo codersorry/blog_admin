@@ -4,13 +4,10 @@ import {
   DesktopOutlined,
   PieChartOutlined,
   FileOutlined,
-  TeamOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import "../static/css/adminIndex.css";
-import { Route, Routes } from "react-router-dom";
-import AddArticle from "./AddArticle";
+import { useNavigate, Outlet } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -31,22 +28,29 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Option 1", "1", <PieChartOutlined />),
-  getItem("Option 2", "2", <DesktopOutlined />),
-  getItem("User", "sub1", <UserOutlined />, [
-    getItem("Tom", "3"),
-    getItem("Bill", "4"),
-    getItem("Alex", "5"),
-  ]),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem("Team 1", "6"),
-    getItem("Team 2", "8"),
-  ]),
-  getItem("Files", "9", <FileOutlined />),
+  getItem("工作台", "workSpace", <PieChartOutlined />),
+  getItem("添加文章", "addArticle", <DesktopOutlined />),
+  getItem("文章列表", "articleList", <DesktopOutlined />),
+  // getItem("文章管理", "sub1", <UserOutlined />, [
+  //   getItem("Tom", "3"),
+  //   getItem("Bill", "4"),
+  //   getItem("Alex", "5"),
+  // ]),
+  getItem("留言管理", "9", <FileOutlined />),
 ];
 
 const AdminIndex: React.FC = () => {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+
+  //点击菜单跳转路由
+  const clickMenuLinkTo = (e: any) => {
+    if (e.key === "addArticle") {
+      navigate("/main/add");
+    } else if (e.key === "articleList") {
+      navigate("/main/list");
+    }
+  };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -61,6 +65,7 @@ const AdminIndex: React.FC = () => {
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
+          onClick={clickMenuLinkTo}
         />
       </Sider>
       <Layout className="site-layout">
@@ -75,9 +80,7 @@ const AdminIndex: React.FC = () => {
             style={{ padding: 24, minHeight: 360 }}
           >
             <div>
-              <Routes>
-                <Route path="/" element={<AddArticle />}></Route>
-              </Routes>
+              <Outlet />
             </div>
           </div>
         </Content>

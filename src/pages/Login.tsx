@@ -1,18 +1,45 @@
 import React, { useState } from "react";
-import { Button, Card, Input, Spin } from "antd";
+import { useNavigate } from "react-router-dom";
+import { Button, Card, Input, Spin, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "../static/css/login.css";
+import { checkLogin } from "../services/login";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const checkLogin = () => {
+  const clickLogin = async () => {
     setIsLoading(true);
-    setTimeout(() => {
+    if (!userName) {
+      message.destroy();
+      message.error("用户名不能为空");
       setIsLoading(false);
-    }, 1000);
+      return false;
+    } else if (!password) {
+      message.destroy();
+      message.error("密码不能为空");
+      setIsLoading(false);
+      return false;
+    }
+    let loginInfo = {
+      userName,
+      password,
+    };
+    const res = await checkLogin(loginInfo);
+
+    setIsLoading(false);
+    //@ts-ignore
+    if (res.result) {
+      //@ts-ignore
+      localStorage.setItem("openId", res.openId);
+      navigate("/main");
+    } else {
+      message.error("登录失败");
+    }
   };
 
   return (
@@ -49,7 +76,7 @@ const Login = () => {
             type="primary"
             size="large"
             block
-            onClick={() => checkLogin()}
+            onClick={() => clickLogin()}
           >
             登录
           </Button>
