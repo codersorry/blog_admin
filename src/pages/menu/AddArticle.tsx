@@ -104,6 +104,7 @@ const AddArticle = () => {
   };
 
   //保存文章
+  //@ts-ignore
   const saveArticle = async () => {
     if (!selectedType) {
       message.destroy();

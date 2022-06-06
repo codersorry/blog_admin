@@ -12,6 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  //@ts-ignore
   const clickLogin = async () => {
     setIsLoading(true);
     if (!userName) {
@@ -25,6 +26,7 @@ const Login = () => {
       setIsLoading(false);
       return false;
     }
+
     let loginInfo = {
       userName,
       password,
